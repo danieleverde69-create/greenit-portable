@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Green IT
+Comment=Avvia Green IT locale
+Exec=sh -c 'cd "$(dirname "%k")" && ./GreenIT-Linux.sh'
+Terminal=true
+Categories=Office;

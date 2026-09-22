@@ -9,8 +9,9 @@ cartelle `runtime/<sistema>-<architettura>/`:
 - `greenit-service` compilato con PyInstaller (oppure `python` con il pacchetto `cryptography` incluso);
 - `node` con `node_modules` pronto nel progetto.
 
-I file `start-windows.bat`, `start-macos.command` e `start-linux.sh` sono gli
-avviatori per i tre sistemi. Prima della consegna va eseguita una build web con
+I file nella radice `GreenIT-macOS.command`, `GreenIT-Windows.bat`,
+`GreenIT-Linux.sh` e `GreenIT.desktop` sono gli avviatori cliccabili per i tre
+sistemi. Prima della consegna va eseguita una build web con
 `npm run build`.
 
 ## Creazione di un pacchetto

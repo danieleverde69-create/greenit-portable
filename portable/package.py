@@ -43,6 +43,12 @@ def main() -> int:
     copy_tree(APP, destination / "gestionale-it-local")
     copy_tree(runtime, destination / "runtime" / args.platform)
     copy_tree(ROOT / "portable", destination / "portable")
+    for launcher in ("GreenIT-macOS.command", "GreenIT-Windows.bat", "GreenIT-Linux.sh", "GreenIT.desktop"):
+        source = ROOT / "portable" / launcher
+        target = destination / launcher
+        shutil.copy2(source, target)
+        if target.suffix in {".command", ".sh", ".desktop"}:
+            target.chmod(target.stat().st_mode | 0o111)
     # Una sola cartella dati alla radice: i pacchetti dei diversi OS possono
     # essere estratti nella stessa directory GreenIT sull'SSD.
     source_data = APP / "data"
