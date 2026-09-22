@@ -1,0 +1,64 @@
+name: Build Green IT portable
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows-x64
+          - os: macos-13
+            platform: darwin-x64
+          - os: macos-14
+            platform: darwin-arm64
+          - os: ubuntu-latest
+            platform: linux-x64
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: gestionale-it-local
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: gestionale-it-local/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install and build web app
+        run: npm ci && npm run build
+      - name: Build standalone local service
+        run: |
+          python -m pip install --upgrade pip pyinstaller
+          python -m PyInstaller --onefile --name greenit-service local_service.py
+      - name: Assemble portable package (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        working-directory: .
+        run: |
+          mkdir -p runtime/${{ matrix.platform }}
+          cp gestionale-it-local/dist/greenit-service runtime/${{ matrix.platform }}/greenit-service
+          cp "$(command -v node)" runtime/${{ matrix.platform }}/node
+          chmod +x runtime/${{ matrix.platform }}/greenit-service runtime/${{ matrix.platform }}/node
+          python3 portable/package.py ${{ matrix.platform }}
+      - name: Assemble portable package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: .
+        run: |
+          New-Item -ItemType Directory -Force "runtime/${{ matrix.platform }}" | Out-Null
+          Copy-Item "gestionale-it-local/dist/greenit-service.exe" "runtime/${{ matrix.platform }}/greenit-service.exe"
+          Copy-Item (Get-Command node).Source "runtime/${{ matrix.platform }}/node.exe"
+          py portable/package.py ${{ matrix.platform }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GreenIT-${{ matrix.platform }}
+          path: release/GreenIT-${{ matrix.platform }}.zip

@@ -1,0 +1,1 @@
+.wide-field{grid-column:1/-1}.company-form-panel textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:7px;background:transparent;color:inherit;resize:vertical;font:inherit}.dark .company-form-panel textarea{background:#111d2b;border-color:#40536a}@media(max-width:650px){.wide-field{grid-column:1}}
