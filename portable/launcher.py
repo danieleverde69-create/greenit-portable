@@ -15,7 +15,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / "gestionale-it-local"
-DATA = APP / "data"
+# La cartella dati e' condivisa da tutti i launcher presenti sull'SSD.
+DATA = ROOT / "data"
 WEB_PORT = int(os.environ.get("GREENIT_WEB_PORT", "3000"))
 API_PORT = int(os.environ.get("GREENIT_API_PORT", "8174"))
 

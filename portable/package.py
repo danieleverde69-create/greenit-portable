@@ -43,7 +43,14 @@ def main() -> int:
     copy_tree(APP, destination / "gestionale-it-local")
     copy_tree(runtime, destination / "runtime" / args.platform)
     copy_tree(ROOT / "portable", destination / "portable")
-    (destination / "gestionale-it-local" / "data").mkdir(parents=True, exist_ok=True)
+    # Una sola cartella dati alla radice: i pacchetti dei diversi OS possono
+    # essere estratti nella stessa directory GreenIT sull'SSD.
+    source_data = APP / "data"
+    target_data = destination / "data"
+    if source_data.exists():
+        copy_tree(source_data, target_data)
+    shutil.rmtree(destination / "gestionale-it-local" / "data", ignore_errors=True)
+    target_data.mkdir(parents=True, exist_ok=True)
     archive = OUT / f"{name}.zip"
     OUT.mkdir(parents=True, exist_ok=True)
     if archive.exists():
@@ -51,7 +58,7 @@ def main() -> int:
     with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:
         for item in destination.rglob("*"):
             if item.is_file():
-                bundle.write(item, item.relative_to(OUT))
+                bundle.write(item, Path("GreenIT") / item.relative_to(destination))
     print(f"Creato: {archive}")
     return 0
 

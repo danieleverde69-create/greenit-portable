@@ -25,4 +25,7 @@ python3 portable/package.py linux-x64
 python3 portable/package.py windows-x64
 ```
 
-Il risultato viene scritto in `release/GreenIT-<piattaforma>.zip`.
+Il risultato viene scritto in `release/GreenIT-<piattaforma>.zip`. Gli archivi
+hanno tutti la stessa radice interna `GreenIT/`: se vuoi usare l'SSD su piu'
+sistemi, estrai gli archivi nella stessa cartella e conserva una sola cartella
+`data/`. I launcher useranno automaticamente quel database condiviso.
