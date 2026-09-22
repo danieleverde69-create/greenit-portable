@@ -1,13 +1,14 @@
 # Green IT - avvio web locale
 
 Gli avviatori risolvono i percorsi rispetto alla directory dell'SSD e avviano
-il servizio dati (`8174`) e la vista web (`3000`).
+il servizio dati (`8174`) e la vista web Vinext (`3000`).
 
 Per una distribuzione completamente portable, aggiungere i runtime nelle
 cartelle `runtime/<sistema>-<architettura>/`:
 
 - `greenit-service` compilato con PyInstaller (oppure `python` con il pacchetto `cryptography` incluso);
-- `node` con `node_modules` pronto nel progetto.
+- `node` con `node_modules` pronto nel progetto. Il launcher usa direttamente
+  `vinext start`; Wrangler/workerd servono solo per il deploy Cloudflare.
 
 I file nella radice `GreenIT-macOS.command`, `GreenIT-Windows.bat`,
 `GreenIT-Linux.sh` e `GreenIT.desktop` sono gli avviatori cliccabili per i tre

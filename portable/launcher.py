@@ -64,7 +64,10 @@ def main() -> int:
     try:
         api_command = [str(service)] if service else [str(python), str(APP / "local_service.py")]
         processes.append(subprocess.Popen(api_command, cwd=APP, env=env))
-        processes.append(subprocess.Popen([str(node), str(APP / "node_modules" / "wrangler" / "bin" / "wrangler.js"), "dev", "--config", "dist/server/wrangler.json", "--port", str(WEB_PORT)], cwd=APP, env=env))
+        # Per la distribuzione locale usiamo il server HTTP di Vinext. Wrangler
+        # e workerd sono necessari per Cloudflare, ma introducono dipendenze
+        # non necessarie (e controlli Gatekeeper) in una copia su SSD.
+        processes.append(subprocess.Popen([str(node), str(APP / "node_modules" / "vinext" / "dist" / "cli.js"), "start", "-p", str(WEB_PORT)], cwd=APP, env=env))
         if not wait_for_port(API_PORT) or not wait_for_port(WEB_PORT):
             print("Impossibile avviare i servizi locali.", file=sys.stderr)
             return 1
